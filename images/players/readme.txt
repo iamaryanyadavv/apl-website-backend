@@ -1,0 +1,1 @@
+Folder to temporarily store player images while uploading to googledrive and then deleting once done.

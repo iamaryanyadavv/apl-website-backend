@@ -1,0 +1,1 @@
+Folder to temporarily store team payment images while uploading to googledrive and then deleting once done.

@@ -8,9 +8,6 @@ const stream =  require('stream');
 const buffer = require('buffer');
 const path = require('path');
 
-
-
-
 const app = express();
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors());
@@ -48,9 +45,26 @@ app.get('/registration/player', async(req,res)=>{
     const RegisteredPlayersEmailData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: 'PLAYERTESTSHEET!E2:E200'
+        range: 'PLAYERTESTSHEET!E2:E900'
     })
     res.send(RegisteredPlayersEmailData.data);
+})
+
+// GET request to get APL 6 registered teams emailIDs data
+app.get('/registration/team', async(req,res)=>{
+
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const RegisteredTeamsEmailData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'TEAMTESTSHEET!D2:D900'
+    })
+    res.send(RegisteredTeamsEmailData.data);
 })
 
 // POST request to store APL 6 player data in database
@@ -85,6 +99,35 @@ app.post('/registration/player', async (req, res) =>{
       });
 } )
 
+// POST request to store APL 6 team data in database
+app.post('/registration/team', async (req, res) =>{
+
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    await googleSheets.spreadsheets.values.append({
+        spreadsheetId: spreadsheetId,
+        range: "TEAMTESTSHEET",
+        valueInputOption: "USER_ENTERED",
+        resource: {
+            // teamlogo, teamname, managername, manageremailid, managerphone, totalownersnumber, allownersemail, allownersemailIDs
+            values: [[
+                req.body.teamlogo,
+                req.body.teamname, 
+                req.body.managername, 
+                req.body.manageremail, 
+                req.body.managerphone,
+                req.body.totalowners, 
+                req.body.teamownersnames, 
+                req.body.teamownersemailIDs,
+            ]],
+        },
+      });
+} )
+
 
 
 
@@ -92,7 +135,7 @@ app.post('/registration/player', async (req, res) =>{
 
 //Code to send player image to google drive
 
-    //to store player image file locally first, and also update the name
+    // function to store player image file locally first, and also update the name
     const Playermulter = Multer({
         storage: Multer.diskStorage({
         destination: function (req, file, callback) {
@@ -107,7 +150,7 @@ app.post('/registration/player', async (req, res) =>{
         },
     });
 
-    // to delete the locally stored image file after uploading to google drive
+    // function to delete the locally stored image file after uploading to google drive
     const deletePlayerFile = (filePath) => {
         fs.unlink(filePath, () => {
             console.log("player profile image file deleted");
@@ -144,7 +187,7 @@ app.post('/registration/player', async (req, res) =>{
 
 //Code to send player PAYMENT image to google drive
 
-    //to store player image file locally first, and also update the name
+    //function to store player image file locally first, and also update the name
     const PlayerPaymentmulter = Multer({
         storage: Multer.diskStorage({
         destination: function (req, file, callback) {
@@ -159,7 +202,7 @@ app.post('/registration/player', async (req, res) =>{
         },
     });
 
-    // to delete the locally stored image file after uploading to google drive
+    //function to delete the locally stored image file after uploading to google drive
     const deletePlayerPaymentFile = (filePath) => {
         fs.unlink(filePath, () => {
             console.log("player payment file deleted");
@@ -193,45 +236,7 @@ app.post('/registration/player', async (req, res) =>{
 
 
 
-
-
-// FOR TESTING! POST request when we were testing image upload
-app.post('/seasons/apl5/players', async (req,res)=>{
-
-    const auth= new google.auth.GoogleAuth({
-        keyFile: 'credentials.json',
-        scopes: 'https://www.googleapis.com/auth/spreadsheets'
-    })
-    const client = await auth.getClient();
-    const googleSheets = google.sheets({version: 'v4', auth: client});
-    await googleSheets.spreadsheets.values.append({
-        spreadsheetId: spreadsheetId,
-        range: "IMAGE",
-        valueInputOption: "USER_ENTERED",
-        resource: {
-            values: [[
-                req.body.image,
-                req.body.name
-            ]]
-        }
-    });
-    console.log(res)
-})
-
-
-app.get('/registration/player/payment', async (req, res) => {
-    const paymentIntent = await stripe.paymentIntents.create({
-        amount: 200,
-        currency: 'inr',
-        automatic_payment_methods: {enabled: true},
-      });
-    res.json({client_secret: paymentIntent.client_secret});
-});
-
-
-
-
-//Adding functions to accept Team logo image and team payment image
+//Code to send team logo image to google drive
 
     const Teammulter = Multer({
         storage: Multer.diskStorage({
@@ -275,6 +280,8 @@ app.get('/registration/player/payment', async (req, res) => {
         deleteTeamFile(req.file.path);
     })
 
+// Code to send team PAYMENT image to google drive
+
     const TeamPaymentmulter = Multer({
         storage: Multer.diskStorage({
         destination: function (req, file, callback) {
@@ -315,6 +322,30 @@ app.get('/registration/player/payment', async (req, res) => {
             fields: "id",
         });
         deleteTeamPaymentFile(req.file.path);
+    })
+
+
+// FOR TESTING! POST request when we were testing image upload
+    app.post('/seasons/apl5/players', async (req,res)=>{
+
+        const auth= new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        await googleSheets.spreadsheets.values.append({
+            spreadsheetId: spreadsheetId,
+            range: "IMAGE",
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: [[
+                    req.body.image,
+                    req.body.name
+                ]]
+            }
+        });
+        console.log(res)
     })
 
 

@@ -1,0 +1,1 @@
+Folder to temporarily store team logos images while uploading to googledrive and then deleting once done.
