@@ -88,6 +88,8 @@ app.post('/registration/player', async (req, res) =>{
 
 
 
+
+
 //Code to send player image to google drive
 
     //to store player image file locally first, and also update the name
@@ -225,6 +227,95 @@ app.get('/registration/player/payment', async (req, res) => {
       });
     res.json({client_secret: paymentIntent.client_secret});
 });
+
+
+
+
+//Adding functions to accept Team logo image and team payment image
+
+    const Teammulter = Multer({
+        storage: Multer.diskStorage({
+        destination: function (req, file, callback) {
+            callback(null, './images/teams');
+        },
+        filename: function (req, file, callback) {
+            callback(null, file.originalname);
+        },
+        }),
+        limits: {
+        fileSize: 5 * 1024 * 1024,
+        },
+    });
+
+    const deleteTeamFile = (filePath) => {
+        fs.unlink(filePath, () => {
+            console.log("Team logo image file deleted");
+        });
+    };
+
+    app.post('/registration/teamlogo',Teammulter.single('file') ,async (req, res) => {
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/drive'
+        })
+        const googleDrive = google.drive({ version: "v3", auth });
+        const fileMetadata = {
+            name: req.file.originalname,
+            parents: [teamfoldergoogledriveID]
+        };
+        const media = {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(req.file.path)
+        };
+        const response = await googleDrive.files.create({
+            requestBody: fileMetadata,
+            media: media,
+            fields: "id",
+        });
+        deleteTeamFile(req.file.path);
+    })
+
+    const TeamPaymentmulter = Multer({
+        storage: Multer.diskStorage({
+        destination: function (req, file, callback) {
+            callback(null, './images/teampayments');
+        },
+        filename: function (req, file, callback) {
+            callback(null, file.originalname);
+        },
+        }),
+        limits: {
+        fileSize: 5 * 1024 * 1024,
+        },
+    });
+
+    const deleteTeamPaymentFile = (filePath) => {
+        fs.unlink(filePath, () => {
+            console.log("Team payment file deleted");
+        });
+    };
+
+    app.post('/registration/teampaymentimages',TeamPaymentmulter.single('file') ,async (req, res) => {
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/drive'
+        })
+        const googleDrive = google.drive({ version: "v3", auth });
+        const fileMetadata = {
+            name: req.file.originalname,
+            parents: [teamfoldergoogledriveID]
+        };
+        const media = {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(req.file.path)
+        };
+        const response = await googleDrive.files.create({
+            requestBody: fileMetadata,
+            media: media,
+            fields: "id",
+        });
+        deleteTeamPaymentFile(req.file.path);
+    })
 
 
 app.listen(3001, (req,res)=>{
