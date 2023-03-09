@@ -27,7 +27,7 @@ app.get('/seasons/apl5/players', async (req,res)=>{
     const PlayerData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: 'Players'
+        range: 'APL5Players'
     })
     res.send(PlayerData.data);
 })
@@ -348,8 +348,8 @@ app.post('/registration/team', async (req, res) =>{
         console.log(res)
     })
 
-// POST request to store APL 6 player data in database
-app.post('/registration/fifa', async (req, res) =>{
+// GET request to get fifa registered participants emailIDs data
+app.get('/registration/fifa', async(req,res)=>{
 
     const auth = new google.auth.GoogleAuth({
         keyFile: 'credentials.json',
@@ -357,25 +357,48 @@ app.post('/registration/fifa', async (req, res) =>{
     })
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
-    await googleSheets.spreadsheets.values.append({
-        spreadsheetId: spreadsheetId,
-        range: "FIFATESTSHEET",
-        valueInputOption: "USER_ENTERED",
-        resource: {
-            values: [[
-                req.body.participantone,
-                req.body.participantonephone,
-                req.body.participantoneemail,
-                req.body.participantonebatch,
-                req.body.participanttwo,
-                req.body.participanttwophone,
-                req.body.participanttwoemail,
-                req.body.participanttwobatch,
-                req.body.image
-            ]],
-        },
-      });
-} )
+    const Participants1EmailData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'FIFATESTSHEET!C2:C900'
+    })
+    const Participants2EmailData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'FIFATESTSHEET!G2:G900'
+    })
+    const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
+    res.send(RegisteredParticipantsEmailData);
+})
+
+// POST request to store fifa parricipants data in database
+    app.post('/registration/fifa', async (req, res) =>{
+
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        await googleSheets.spreadsheets.values.append({
+            spreadsheetId: spreadsheetId,
+            range: "FIFATESTSHEET",
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: [[
+                    req.body.participantone,
+                    req.body.participantonephone,
+                    req.body.participantoneemail,
+                    req.body.participantonebatch,
+                    req.body.participanttwo,
+                    req.body.participanttwophone,
+                    req.body.participanttwoemail,
+                    req.body.participanttwobatch,
+                    req.body.image
+                ]],
+            },
+        });
+    } )
 
 app.listen(3001, (req,res)=>{
     console.log("Running on Port: 3001")
