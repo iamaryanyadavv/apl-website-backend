@@ -27,9 +27,9 @@ app.get('/seasons/apl5/players', async (req,res)=>{
     const PlayerData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: 'APL5Players'
+        range: 'APL5Players!2:900'
     })
-    res.send(PlayerData.data);
+    res.send(PlayerData.data.values);
 })
 
 
@@ -349,27 +349,27 @@ app.post('/registration/team', async (req, res) =>{
     })
 
 // GET request to get fifa registered participants emailIDs data
-app.get('/registration/fifa', async(req,res)=>{
+    app.get('/registration/fifa', async(req,res)=>{
 
-    const auth = new google.auth.GoogleAuth({
-        keyFile: 'credentials.json',
-        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const Participants1EmailData = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId,
+            range: 'FIFATESTSHEET!C2:C900'
+        })
+        const Participants2EmailData = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId,
+            range: 'FIFATESTSHEET!G2:G900'
+        })
+        const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
+        res.send(RegisteredParticipantsEmailData)
     })
-    const client = await auth.getClient();
-    const googleSheets = google.sheets({version: 'v4', auth: client});
-    const Participants1EmailData = await googleSheets.spreadsheets.values.get({
-        auth,
-        spreadsheetId,
-        range: 'FIFATESTSHEET!C2:C900'
-    })
-    const Participants2EmailData = await googleSheets.spreadsheets.values.get({
-        auth,
-        spreadsheetId,
-        range: 'FIFATESTSHEET!G2:G900'
-    })
-    const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
-    res.send(RegisteredParticipantsEmailData);
-})
 
 // POST request to store fifa parricipants data in database
     app.post('/registration/fifa', async (req, res) =>{
