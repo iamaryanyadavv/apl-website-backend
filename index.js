@@ -383,6 +383,7 @@ app.post('/registration/team', async (req, res) =>{
             spreadsheetId,
             range: 'FIFATESTSHEET!G2:G900'
         })
+        
         const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
         res.send(RegisteredParticipantsEmailData)
     })
@@ -396,6 +397,7 @@ app.post('/registration/team', async (req, res) =>{
         })
         const client = await auth.getClient();
         const googleSheets = google.sheets({version: 'v4', auth: client});
+        console.log(req)
         await googleSheets.spreadsheets.values.append({
             spreadsheetId: spreadsheetId,
             range: "FIFATESTSHEET",
