@@ -343,7 +343,7 @@ app.post('/registration/team', async (req, res) =>{
 
 
 // FOR TESTING! POST request when we were testing image upload
-    app.post('/seasons/apl5/players', async (req,res)=>{
+    app.post('/imagemaker', async (req,res)=>{
 
         const auth= new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
@@ -362,7 +362,7 @@ app.post('/registration/team', async (req, res) =>{
                 ]]
             }
         });
-        console.log(res)
+        res.send('Sent')
     })
 
 // GET request to get fifa registered participants emailIDs data
