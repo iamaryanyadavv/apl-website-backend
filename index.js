@@ -17,7 +17,7 @@ const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
 
 // GET request to get APL 5 players data
-app.get('/seasons/apl5/players', async (req,res)=>{
+app.get('/seasons/apl5/players/playerdata', async (req,res)=>{
     const auth = new google.auth.GoogleAuth({
         keyFile: 'credentials.json',
         scopes: 'https://www.googleapis.com/auth/spreadsheets'
@@ -28,6 +28,22 @@ app.get('/seasons/apl5/players', async (req,res)=>{
         auth,
         spreadsheetId,
         range: 'APL5Players!2:900'
+    })
+    res.send(PlayerData.data.values);
+})
+
+// GET request to get APL 5 teams data
+app.get('/seasons/apl5/players/teamdata', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const PlayerData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range: 'APL5Owners!2:900'
     })
     res.send(PlayerData.data.values);
 })
