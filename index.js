@@ -366,7 +366,7 @@ app.post('/registration/team', async (req, res) =>{
     })
 
 // GET request to get fifa registered participants emailIDs data
-    app.get('/registration/fifa', async(req,res)=>{
+    app.get('/registration/fifa1', async(req,res)=>{
 
         const auth = new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
@@ -379,14 +379,24 @@ app.post('/registration/team', async (req, res) =>{
             spreadsheetId,
             range: 'FIFATESTSHEET!C2:C900'
         })
+        res.send(Participants1EmailData.data)
+        
+    })
+    app.get('/registration/fifa2', async(req,res)=>{
+
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
         const Participants2EmailData = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
             range: 'FIFATESTSHEET!G2:G900'
         })
-        console.log('SDSDSSDSDS')
-        const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
-        res.send(RegisteredParticipantsEmailData)
+        res.send(Participants2EmailData.data)
+        
     })
 
 // POST request to store fifa parricipants data in database
