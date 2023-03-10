@@ -384,7 +384,7 @@ app.post('/registration/team', async (req, res) =>{
             spreadsheetId,
             range: 'FIFATESTSHEET!G2:G900'
         })
-        
+        console.log('SDSDSSDSDS')
         const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
         res.send(RegisteredParticipantsEmailData)
     })
