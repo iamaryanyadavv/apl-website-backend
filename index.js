@@ -15,6 +15,7 @@ app.use(cors());
 const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg';
 const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
+const fifafoldersgoogledriveID = '1ZedYvvCzIoXb08su2SVw2jglpIrU5R0I'
 
 // GET request to get APL 5 players data
 app.get('/seasons/apl5/players/playerdata', async (req,res)=>{
@@ -383,6 +384,7 @@ app.post('/registration/team', async (req, res) =>{
             spreadsheetId,
             range: 'FIFATESTSHEET!G2:G900'
         })
+        
         const RegisteredParticipantsEmailData = Participants1EmailData.data.values.concat(Participants2EmailData.data.values)
         res.send(RegisteredParticipantsEmailData)
     })
@@ -396,6 +398,7 @@ app.post('/registration/team', async (req, res) =>{
         })
         const client = await auth.getClient();
         const googleSheets = google.sheets({version: 'v4', auth: client});
+        console.log(req)
         await googleSheets.spreadsheets.values.append({
             spreadsheetId: spreadsheetId,
             range: "FIFATESTSHEET",
@@ -415,6 +418,30 @@ app.post('/registration/team', async (req, res) =>{
             },
         });
     } )
+
+    app.post('/registration/fifaplayerpaymentimage',PlayerPaymentmulter.single('file') ,async (req, res) => {
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/drive'
+        })
+        const googleDrive = google.drive({ version: "v3", auth });
+        const fileMetadata = {
+            name: req.file.originalname,
+            parents: [fifafoldersgoogledriveID]
+        };
+        // const bufferStream = new stream.PassThrough()
+        // bufferStream.end(req.body.file.buffer);
+        const media = {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(req.file.path)
+        };
+        const response = await googleDrive.files.create({
+            requestBody: fileMetadata,
+            media: media,
+            fields: "id",
+        });
+        deletePlayerPaymentFile(req.file.path);
+    })
 
 app.listen(3001, (req,res)=>{
     console.log("Running on Port: 3001")
