@@ -13,6 +13,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors());
 
 const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg';
+const realspreadsheetId = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
 const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
 const fifafoldersgoogledriveID = '1ZedYvvCzIoXb08su2SVw2jglpIrU5R0I'
@@ -27,28 +28,43 @@ app.get('/seasons/apl5/players/playerdata', async (req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const PlayerData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId,
+        spreadsheetId: realspreadsheetId,
         range: 'APL5Players!2:900'
     })
     res.send(PlayerData.data.values);
 })
 
 // GET request to get APL 5 teams data
-app.get('/seasons/apl5/players/teamdata', async (req,res)=>{
+app.get('/seasons/apl5/teamdata', async (req,res)=>{
     const auth = new google.auth.GoogleAuth({
         keyFile: 'credentials.json',
         scopes: 'https://www.googleapis.com/auth/spreadsheets'
     })
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
-    const PlayerData = await googleSheets.spreadsheets.values.get({
+    const TeamData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId,
-        range: 'APL5Owners!2:900'
+        spreadsheetId: realspreadsheetId,
+        range: 'APL5Teams!2:900'
     })
-    res.send(PlayerData.data.values);
+    res.send(TeamData.data.values);
 })
 
+// GET request to get APL 5 teams budget data
+app.get('/seasons/apl5/teamdata/budgets', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const TeamData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: realspreadsheetId,
+        range: 'APL5TeamBudgetSplits'
+    })
+    res.send(TeamData.data.values);
+})
 
 // GET request to get APL 6 registered players emailIDs data
 app.get('/registration/player', async(req,res)=>{
@@ -341,33 +357,9 @@ app.post('/registration/team', async (req, res) =>{
         deleteTeamPaymentFile(req.file.path);
     })
 
-
-// FOR TESTING! POST request when we were testing image upload
-    app.post('/imagemaker', async (req,res)=>{
-
-        const auth= new google.auth.GoogleAuth({
-            keyFile: 'credentials.json',
-            scopes: 'https://www.googleapis.com/auth/spreadsheets'
-        })
-        const client = await auth.getClient();
-        const googleSheets = google.sheets({version: 'v4', auth: client});
-        await googleSheets.spreadsheets.values.append({
-            spreadsheetId: spreadsheetId,
-            range: "IMAGE",
-            valueInputOption: "USER_ENTERED",
-            resource: {
-                values: [[
-                    req.body.image,
-                    req.body.name
-                ]]
-            }
-        });
-        res.send('Sent')
-    })
-
-// GET request to get fifa registered participants emailIDs data
+    // GET request to get fifa registered participants emailIDs data
     app.get('/registration/fifa1', async(req,res)=>{
-
+        
         const auth = new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
             scopes: 'https://www.googleapis.com/auth/spreadsheets'
@@ -383,7 +375,7 @@ app.post('/registration/team', async (req, res) =>{
         
     })
     app.get('/registration/fifa2', async(req,res)=>{
-
+        
         const auth = new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
             scopes: 'https://www.googleapis.com/auth/spreadsheets'
@@ -398,10 +390,10 @@ app.post('/registration/team', async (req, res) =>{
         res.send(Participants2EmailData.data)
         
     })
-
-// POST request to store fifa parricipants data in database
+    
+    // POST request to store fifa parricipants data in database
     app.post('/registration/fifa', async (req, res) =>{
-
+        
         const auth = new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
             scopes: 'https://www.googleapis.com/auth/spreadsheets'
@@ -428,7 +420,7 @@ app.post('/registration/team', async (req, res) =>{
             },
         });
     } )
-
+    
     app.post('/registration/fifaplayerpaymentimage',PlayerPaymentmulter.single('file') ,async (req, res) => {
         const auth = new google.auth.GoogleAuth({
             keyFile: 'credentials.json',
@@ -452,7 +444,31 @@ app.post('/registration/team', async (req, res) =>{
         });
         deletePlayerPaymentFile(req.file.path);
     })
+    
+    app.listen(3001, (req,res)=>{
+        console.log("Running on Port: 3001")
+    });
 
-app.listen(3001, (req,res)=>{
-    console.log("Running on Port: 3001")
-});
+
+// FOR TESTING! POST request when we were testing image upload
+    app.post('/imagemaker', async (req,res)=>{
+
+        const auth= new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        await googleSheets.spreadsheets.values.append({
+            spreadsheetId: spreadsheetId,
+            range: "IMAGE",
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: [[
+                    req.body.image,
+                    req.body.name
+                ]]
+            }
+        });
+        res.send('Sent')
+    })
