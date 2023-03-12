@@ -13,7 +13,8 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors());
 
 const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg';
-const realspreadsheetId = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
+const APL5spreadsheetID = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
+const APL6spreadsheetID = '1Hs-L9ebpEWKyQ_XoJoz5fdxTI2LK6sGCdrWyIYC-bqg';
 const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
 const fifafoldersgoogledriveID = '1ZedYvvCzIoXb08su2SVw2jglpIrU5R0I'
@@ -28,7 +29,7 @@ app.get('/seasons/apl5/players/playerdata', async (req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const PlayerData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: realspreadsheetId,
+        spreadsheetId: APL5spreadsheetID,
         range: 'APL5Players!2:900'
     })
     res.send(PlayerData.data.values);
@@ -44,7 +45,7 @@ app.get('/seasons/apl5/teamdata', async (req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const TeamData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: realspreadsheetId,
+        spreadsheetId: APL5spreadsheetID,
         range: 'APL5Teams!2:900'
     })
     res.send(TeamData.data.values);
@@ -60,7 +61,7 @@ app.get('/seasons/apl5/teamdata/budgets', async (req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const TeamData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: realspreadsheetId,
+        spreadsheetId: APL5spreadsheetID,
         range: 'APL5TeamBudgetSplits'
     })
     res.send(TeamData.data.values);
@@ -77,8 +78,8 @@ app.get('/registration/player', async(req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const RegisteredPlayersEmailData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId,
-        range: 'PLAYERTESTSHEET!E2:E900'
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Players!L2:L900'
     })
     res.send(RegisteredPlayersEmailData.data);
 })
@@ -94,8 +95,8 @@ app.get('/registration/team', async(req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const RegisteredTeamsEmailData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId,
-        range: 'TEAMTESTSHEET!D2:D900'
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Teams!B2:B900'
     })
     res.send(RegisteredTeamsEmailData.data);
 })
@@ -110,23 +111,24 @@ app.post('/registration/player', async (req, res) =>{
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
     await googleSheets.spreadsheets.values.append({
-        spreadsheetId: spreadsheetId,
-        range: "PLAYERTESTSHEET",
+        spreadsheetId: APL6spreadsheetID,
+        range: "APL6Players",
         valueInputOption: "USER_ENTERED",
         resource: {
             // image, firstname, middlename, lastname, emailid, batch, phone, gender, primarypos, secondpos, comment
             values: [[
                 req.body.image,
-                req.body.firstname, 
-                req.body.middlename, 
-                req.body.lastname, 
-                req.body.emailid,
-                req.body.batch, 
-                req.body.phonenumber, 
-                req.body.gender, 
-                req.body.primarypos,
-                req.body.secondpos,
-                req.body.comment
+                req.body.name, 
+                req.body.primarypos, 
+                req.body.secondpos, 
+                req.body.comment,
+                req.body.tier, 
+                req.body.price, 
+                req.body.team, 
+                req.body.teamlogo,
+                req.body.gender,
+                req.body.batch,
+                req.body.emailID
             ]],
         },
       });
@@ -142,20 +144,21 @@ app.post('/registration/team', async (req, res) =>{
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
     await googleSheets.spreadsheets.values.append({
-        spreadsheetId: spreadsheetId,
-        range: "TEAMTESTSHEET",
+        spreadsheetId: APL6spreadsheetID,
+        range: "APL6Teams",
         valueInputOption: "USER_ENTERED",
         resource: {
             // teamlogo, teamname, managername, manageremailid, managerphone, totalownersnumber, allownersemail, allownersemailIDs
             values: [[
                 req.body.teamlogo,
-                req.body.teamname, 
-                req.body.managername, 
                 req.body.manageremail, 
-                req.body.managerphone,
-                req.body.totalowners, 
+                req.body.teamname, 
+                req.body.paymentmode, 
+                req.body.managername,
                 req.body.teamownersnames, 
+                req.body.managerphone, 
                 req.body.teamownersemailIDs,
+                req.body.teamownersphones
             ]],
         },
       });
