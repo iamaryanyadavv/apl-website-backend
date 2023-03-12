@@ -20,7 +20,7 @@ const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
 const fifafoldersgoogledriveID = '1ZedYvvCzIoXb08su2SVw2jglpIrU5R0I'
 
 // GET request to get APL 5 players data
-app.get('/seasons/apl5/players/playerdata', async (req,res)=>{
+app.get('/seasons/apl5/playerdata', async (req,res)=>{
     const auth = new google.auth.GoogleAuth({
         keyFile: 'credentials.json',
         scopes: 'https://www.googleapis.com/auth/spreadsheets'
@@ -163,6 +163,77 @@ app.post('/registration/team', async (req, res) =>{
         },
       });
 } )
+
+// POST request to store APL 6 team budgets data in database
+app.post('/registration/team/budgets', async (req, res) =>{
+
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    await googleSheets.spreadsheets.values.append({
+        spreadsheetId: APL6spreadsheetID,
+        range: "APL6TeamBudgetSplits",
+        valueInputOption: "USER_ENTERED",
+        resource: {
+            values: [[
+                req.body.teamname,
+            ]],
+        },
+      });
+} )
+
+// GET request to get APL 6 players data
+app.get('/seasons/apl6/playerdata', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const PlayerData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Players!2:900'
+    })
+    res.send(PlayerData.data.values);
+})
+
+// GET request to get APL 6 teams data
+app.get('/seasons/apl6/teamdata', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const TeamData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Teams!2:900'
+    })
+    res.send(TeamData.data.values);
+})
+
+// GET request to get APL 6 teams budget data
+app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const TeamData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6TeamBudgetSplits'
+    })
+    res.send(TeamData.data.values);
+})
+
+
 
 
 
@@ -475,3 +546,4 @@ app.post('/registration/team', async (req, res) =>{
         });
         res.send('Sent')
     })
+
