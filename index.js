@@ -12,7 +12,7 @@ const app = express();
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors());
 
-const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg';
+const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg'; //test spreadsheet id
 const APL5spreadsheetID = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
 const APL6spreadsheetID = '1Hs-L9ebpEWKyQ_XoJoz5fdxTI2LK6sGCdrWyIYC-bqg';
 const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
@@ -46,7 +46,7 @@ app.get('/seasons/apl5/teamdata', async (req,res)=>{
     const TeamData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL5spreadsheetID,
-        range: 'APL5Teams!2:900'
+        range: 'APL5Teams'
     })
     res.send(TeamData.data.values);
 })
@@ -64,7 +64,7 @@ app.get('/seasons/apl5/teamdata/budgets', async (req,res)=>{
         spreadsheetId: APL5spreadsheetID,
         range: 'APL5TeamBudgetSplits'
     })
-    res.send(TeamData.data.values);
+    res.send(TeamData.data);
 })
 
 // GET request to get APL 6 registered players emailIDs data
@@ -212,7 +212,7 @@ app.get('/seasons/apl6/teamdata', async (req,res)=>{
     const TeamData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL6spreadsheetID,
-        range: 'APL6Teams!2:900'
+        range: 'APL6Teams'
     })
     res.send(TeamData.data.values);
 })
@@ -230,7 +230,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         spreadsheetId: APL6spreadsheetID,
         range: 'APL6TeamBudgetSplits'
     })
-    res.send(TeamData.data.values);
+    res.send(TeamData.data);
 })
 
 
