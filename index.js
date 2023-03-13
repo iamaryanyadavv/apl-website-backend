@@ -196,9 +196,9 @@ app.get('/seasons/apl6/playerdata', async (req,res)=>{
     const PlayerData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL6spreadsheetID,
-        range: 'APL6Players!2:900'
+        range: 'APL6Players'
     })
-    res.send(PlayerData.data.values);
+    res.send(PlayerData.data);
 })
 
 // GET request to get APL 6 teams data
