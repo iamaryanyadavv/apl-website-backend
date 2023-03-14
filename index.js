@@ -110,7 +110,7 @@ app.post('/registration/player', async (req, res) =>{
     })
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
-    await googleSheets.spreadsheets.values.append({
+    const response = await googleSheets.spreadsheets.values.append({
         spreadsheetId: APL6spreadsheetID,
         range: "APL6Players",
         valueInputOption: "USER_ENTERED",
@@ -132,6 +132,7 @@ app.post('/registration/player', async (req, res) =>{
             ]],
         },
       });
+      res.send(response)
 } )
 
 // POST request to store APL 6 team data in database
@@ -143,7 +144,7 @@ app.post('/registration/team', async (req, res) =>{
     })
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
-    await googleSheets.spreadsheets.values.append({
+    const response = await googleSheets.spreadsheets.values.append({
         spreadsheetId: APL6spreadsheetID,
         range: "APL6Teams",
         valueInputOption: "USER_ENTERED",
@@ -162,6 +163,7 @@ app.post('/registration/team', async (req, res) =>{
             ]],
         },
       });
+      res.send(response)
 } )
 
 // POST request to store APL 6 team budgets data in database
