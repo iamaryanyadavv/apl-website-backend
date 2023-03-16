@@ -520,6 +520,63 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         });
         deletePlayerPaymentFile(req.file.path);
     })
+
+    app.get('/seasons/apl6/rules/player', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const playerRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!A2:A5'
+        })
+        res.send(playerRules.data)
+    })
+    app.get('/seasons/apl6/rules/team', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const teamRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!B2:B5'
+        })
+        res.send(teamRules.data)
+    })
+    app.get('/seasons/apl6/rules/auction', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const auctionRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!C2:C5'
+        })
+        res.send(auctionRules.data)
+    })
+    app.get('/seasons/apl6/rules/game', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const gameRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!D2:D5'
+        })
+        res.send(gameRules.data)
+    })
     
     app.listen(3001, (req,res)=>{
         console.log("Running on Port: 3001")
