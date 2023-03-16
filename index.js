@@ -531,7 +531,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const playerRules = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId: APL6spreadsheetID,
-            range: 'APL6Rules!A2:A5'
+            range: 'APL6Rules!A2:A15'
         })
         res.send(playerRules.data)
     })
@@ -545,7 +545,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const teamRules = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId: APL6spreadsheetID,
-            range: 'APL6Rules!B2:B5'
+            range: 'APL6Rules!B2:B15'
         })
         res.send(teamRules.data)
     })
@@ -559,7 +559,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const auctionRules = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId: APL6spreadsheetID,
-            range: 'APL6Rules!C2:C5'
+            range: 'APL6Rules!C2:C15'
         })
         res.send(auctionRules.data)
     })
@@ -573,7 +573,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const gameRules = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId: APL6spreadsheetID,
-            range: 'APL6Rules!D2:D5'
+            range: 'APL6Rules!D2:D15'
         })
         res.send(gameRules.data)
     })
