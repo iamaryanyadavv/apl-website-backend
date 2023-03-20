@@ -492,7 +492,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const client = await auth.getClient();
         const googleSheets = google.sheets({version: 'v4', auth: client});
         console.log(req)
-        await googleSheets.spreadsheets.values.append({
+        const response = await googleSheets.spreadsheets.values.append({
             spreadsheetId: APL6spreadsheetID,
             range: "APL6FIFAEvent",
             valueInputOption: "USER_ENTERED",
@@ -509,7 +509,9 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
                     req.body.image
                 ]],
             },
+            
         });
+        res.send(response)
     } )
     
     app.post('/registration/fifaplayerpaymentimage',PlayerPaymentmulter.single('file') ,async (req, res) => {
