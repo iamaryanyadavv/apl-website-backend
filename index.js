@@ -460,7 +460,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const Participants1EmailData = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: 'APL6FIFAEVENT!C2:C900'
+            range: 'APL6FIFAEvent!C2:C900'
         })
         res.send(Participants1EmailData.data)
         
@@ -476,7 +476,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const Participants2EmailData = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
-            range: 'APL6FIFAEVENT!G2:G900'
+            range: 'APL6FIFAEvent!G2:G900'
         })
         res.send(Participants2EmailData.data)
         
@@ -494,7 +494,7 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         console.log(req)
         await googleSheets.spreadsheets.values.append({
             spreadsheetId: spreadsheetId,
-            range: "APL6FIFAEVENT",
+            range: "APL6FIFAEvent",
             valueInputOption: "USER_ENTERED",
             resource: {
                 values: [[
