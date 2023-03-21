@@ -67,6 +67,86 @@ app.get('/seasons/apl5/teamdata/budgets', async (req,res)=>{
     res.send(TeamData.data);
 })
 
+// GET Request to get APL 5 groups data
+app.get('/seasons/apl5/standings', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Standings = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL5spreadsheetID,
+        range: 'APL5Groups'
+    })
+    res.send(Standings.data);
+})
+
+// GET Request to get APL 5 group a data
+app.get('/seasons/apl5/standings/a', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Standings = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL5spreadsheetID,
+        range: 'APL5Groups!A2:K6'
+    })
+    res.send(Standings.data);
+})
+
+// GET Request to get APL 5 group b data
+app.get('/seasons/apl5/standings/b', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Standings = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL5spreadsheetID,
+        range: 'APL5Groups!A8:K12'
+    })
+    res.send(Standings.data);
+})
+
+// GET Request to get APL 5 group c data
+app.get('/seasons/apl5/standings/c', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Standings = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL5spreadsheetID,
+        range: 'APL5Groups!A14:K18'
+    })
+    res.send(Standings.data);
+})
+
+// GET Request to get APL 5 group d data
+app.get('/seasons/apl5/standings/d', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Standings = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL5spreadsheetID,
+        range: 'APL5Groups!A20:K24'
+    })
+    res.send(Standings.data);
+})
+
 // GET request to get APL 6 registered players emailIDs data
 app.get('/registration/player', async(req,res)=>{
 
