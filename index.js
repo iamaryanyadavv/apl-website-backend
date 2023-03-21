@@ -163,6 +163,21 @@ app.get('/registration/player', async(req,res)=>{
     })
     res.send(RegisteredPlayersEmailData.data);
 })
+app.get('/registration/checkreg', async(req,res)=>{
+
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Players!J2:J900'
+    })
+    res.send(RegisteredPlayersGenderData.data);
+})
 
 // GET request to get APL 6 registered teams emailIDs data
 app.get('/registration/team', async(req,res)=>{
@@ -524,8 +539,8 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const googleSheets = google.sheets({version: 'v4', auth: client});
         const Participants1EmailData = await googleSheets.spreadsheets.values.get({
             auth,
-            spreadsheetId,
-            range: 'FIFATESTSHEET!C2:C900'
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6FIFAEvent!C2:C900'
         })
         res.send(Participants1EmailData.data)
         
@@ -540,8 +555,8 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const googleSheets = google.sheets({version: 'v4', auth: client});
         const Participants2EmailData = await googleSheets.spreadsheets.values.get({
             auth,
-            spreadsheetId,
-            range: 'FIFATESTSHEET!G2:G900'
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6FIFAEvent!G2:G900'
         })
         res.send(Participants2EmailData.data)
         
@@ -557,9 +572,9 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
         const client = await auth.getClient();
         const googleSheets = google.sheets({version: 'v4', auth: client});
         console.log(req)
-        await googleSheets.spreadsheets.values.append({
-            spreadsheetId: spreadsheetId,
-            range: "FIFATESTSHEET",
+        const response = await googleSheets.spreadsheets.values.append({
+            spreadsheetId: APL6spreadsheetID,
+            range: "APL6FIFAEvent",
             valueInputOption: "USER_ENTERED",
             resource: {
                 values: [[
@@ -574,7 +589,9 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
                     req.body.image
                 ]],
             },
+            
         });
+        res.send(response)
     } )
     
     app.post('/registration/fifaplayerpaymentimage',PlayerPaymentmulter.single('file') ,async (req, res) => {
@@ -599,6 +616,63 @@ app.get('/seasons/apl6/teamdata/budgets', async (req,res)=>{
             fields: "id",
         });
         deletePlayerPaymentFile(req.file.path);
+    })
+
+    app.get('/seasons/apl6/rules/player', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const playerRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!A2:A15'
+        })
+        res.send(playerRules.data)
+    })
+    app.get('/seasons/apl6/rules/team', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const teamRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!B2:B15'
+        })
+        res.send(teamRules.data)
+    })
+    app.get('/seasons/apl6/rules/auction', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const auctionRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!C2:C15'
+        })
+        res.send(auctionRules.data)
+    })
+    app.get('/seasons/apl6/rules/game', async (req, res)=>{
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({version: 'v4', auth: client});
+        const gameRules = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL6spreadsheetID,
+            range: 'APL6Rules!D2:D15'
+        })
+        res.send(gameRules.data)
     })
     
     app.listen(3001, (req,res)=>{
