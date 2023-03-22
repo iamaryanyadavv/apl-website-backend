@@ -147,6 +147,22 @@ app.get('/seasons/apl5/standings/d', async (req,res)=>{
     res.send(Standings.data);
 })
 
+// GET Request to get APL 5 day 1 games
+app.get('/seasons/apl5/games', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Day1Games = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL5spreadsheetID,
+        range: 'APL5Games'
+    })
+    res.send(Day1Games.data);
+})
+
 // GET request to get APL 6 registered players emailIDs data
 app.get('/registration/player', async(req,res)=>{
 
