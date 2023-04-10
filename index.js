@@ -211,6 +211,22 @@ app.get('/registration/checkreg', async(req,res)=>{
     res.send(RegisteredPlayersGenderData.data);
 })
 
+app.get('/registration/checkteamreg', async(req,res)=>{
+
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Teams!C2:C30'
+    })
+    res.send(RegisteredPlayersGenderData.data);
+})
+
 // GET request to get APL 6 registered teams emailIDs data
 app.get('/registration/team', async(req,res)=>{
 
