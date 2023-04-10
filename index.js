@@ -490,6 +490,21 @@ app.get('/seasons/apl6/standings/f', async (req,res)=>{
     res.send(Standings.data);
 })
 
+// GET Request to get APL 6 group bot data
+app.get('/seasons/apl6/standings/bot', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Standings = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Groups!A32:K37'
+    })
+    res.send(Standings.data);
+})
 
 
 
