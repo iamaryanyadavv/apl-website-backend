@@ -506,6 +506,21 @@ app.get('/seasons/apl6/standings/bot', async (req,res)=>{
     res.send(Standings.data);
 })
 
+app.get('/seasons/apl6/games', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const Games = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL6spreadsheetID,
+        range: 'APL6Games'
+    })
+    res.send(Games.data);
+})
+
 
 
 
