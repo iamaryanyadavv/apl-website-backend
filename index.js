@@ -17,7 +17,7 @@ const APL5spreadsheetID = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
 const APL6spreadsheetID = '1Hs-L9ebpEWKyQ_XoJoz5fdxTI2LK6sGCdrWyIYC-bqg';
 const APL7spreadsheetID = '1fkUK0cGVbCjLuViQAFxRRAalFl2hwq9BLWfg4mo0qGc';
 
-// const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
+const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
 const apl7playersfoldergoogledriveID = '14Hlwkj8zfnDaw05TruqjJNJQyvktSNuV';
 
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
@@ -198,7 +198,7 @@ app.get('/registration/player', async(req,res)=>{
     const RegisteredPlayersEmailData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL7spreadsheetID,
-        range: 'APL6Players!L2:L900'
+        range: 'Player Registration!L2:L900'
     })
     res.send(RegisteredPlayersEmailData.data);
 })
@@ -213,7 +213,7 @@ app.get('/registration/checkreg', async(req,res)=>{
     const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL7spreadsheetID,
-        range: 'APL6Players!J2:J900'
+        range: 'Player Registration!J2:J900'
     })
     res.send(RegisteredPlayersGenderData.data);
 })
@@ -228,8 +228,8 @@ app.get('/registration/checkteamreg', async(req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: APL6spreadsheetID,
-        range: 'APL6Teams!C2:C30'
+        spreadsheetId: APL7spreadsheetID,
+        range: 'Team Registration!C2:C30'
     })
     res.send(RegisteredPlayersGenderData.data);
 })
@@ -246,7 +246,7 @@ app.get('/registration/team', async(req,res)=>{
     const RegisteredTeamsEmailData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL6spreadsheetID,
-        range: 'APL6Teams!B2:B900'
+        range: 'Team Registration!B2:B900'
     })
     res.send(RegisteredTeamsEmailData.data);
 })
