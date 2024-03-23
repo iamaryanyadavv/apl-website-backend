@@ -197,7 +197,7 @@ app.get('/registration/player', async(req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const RegisteredPlayersEmailData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: APL6spreadsheetID,
+        spreadsheetId: APL7spreadsheetID,
         range: 'APL6Players!L2:L900'
     })
     res.send(RegisteredPlayersEmailData.data);
@@ -212,7 +212,7 @@ app.get('/registration/checkreg', async(req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: APL6spreadsheetID,
+        spreadsheetId: APL7spreadsheetID,
         range: 'APL6Players!J2:J900'
     })
     res.send(RegisteredPlayersGenderData.data);
