@@ -326,8 +326,8 @@ app.post('/registration/team/budgets', async (req, res) =>{
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
     await googleSheets.spreadsheets.values.append({
-        spreadsheetId: APL6spreadsheetID,
-        range: "APL6TeamBudgetSplits",
+        spreadsheetId: APL7spreadsheetID,
+        range: "Team Budget Splits",
         valueInputOption: "USER_ENTERED",
         resource: {
             values: [[
