@@ -15,6 +15,7 @@ app.use(cors());
 const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg'; //test spreadsheet id
 const APL5spreadsheetID = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
 const APL6spreadsheetID = '1Hs-L9ebpEWKyQ_XoJoz5fdxTI2LK6sGCdrWyIYC-bqg';
+const APL7spreadsheetID = '1fkUK0cGVbCjLuViQAFxRRAalFl2hwq9BLWfg4mo0qGc';
 const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
 const fifafoldersgoogledriveID = '1ZedYvvCzIoXb08su2SVw2jglpIrU5R0I';
@@ -254,8 +255,8 @@ app.post('/registration/player', async (req, res) =>{
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const response = await googleSheets.spreadsheets.values.append({
-        spreadsheetId: APL6spreadsheetID,
-        range: "APL6Players",
+        spreadsheetId: APL7spreadsheetID,
+        range: "Player Registration",
         valueInputOption: "USER_ENTERED",
         resource: {
             // image, firstname, middlename, lastname, emailid, batch, phone, gender, primarypos, secondpos, comment
@@ -288,8 +289,8 @@ app.post('/registration/team', async (req, res) =>{
     const client = await auth.getClient();
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const response = await googleSheets.spreadsheets.values.append({
-        spreadsheetId: APL6spreadsheetID,
-        range: "APL6Teams",
+        spreadsheetId: APL7spreadsheetID,
+        range: "Team Registration",
         valueInputOption: "USER_ENTERED",
         resource: {
             // teamlogo, teamname, managername, manageremailid, managerphone, totalownersnumber, allownersemail, allownersemailIDs
