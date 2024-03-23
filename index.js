@@ -245,7 +245,7 @@ app.get('/registration/team', async(req,res)=>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const RegisteredTeamsEmailData = await googleSheets.spreadsheets.values.get({
         auth,
-        spreadsheetId: APL6spreadsheetID,
+        spreadsheetId: APL7spreadsheetID,
         range: 'Team Registration!B2:B900'
     })
     res.send(RegisteredTeamsEmailData.data);
