@@ -16,8 +16,14 @@ const spreadsheetId = '1E6iMfg7OmKf-39mIfpm6oGcGSogJAABad_bjTihh-Qg'; //test spr
 const APL5spreadsheetID = '1IvrgdFqmex0yfk-JXP47bhp57BOkvzoQlV_y4W4OET0';
 const APL6spreadsheetID = '1Hs-L9ebpEWKyQ_XoJoz5fdxTI2LK6sGCdrWyIYC-bqg';
 const APL7spreadsheetID = '1fkUK0cGVbCjLuViQAFxRRAalFl2hwq9BLWfg4mo0qGc';
-const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
+
+// const playersfoldergoogledriveID = '1usR6T1GvBMdKHL9i4pxzoX_bYnwsQOtT';
+const apl7playersfoldergoogledriveID = '14Hlwkj8zfnDaw05TruqjJNJQyvktSNuV';
+
 const teamfoldergoogledriveID = '1QyDqYL1Q9JpaOPbdGhGfEaz1Cf-BKiuu';
+const apl7teamfoldergoogledriveID = '1s_HmXoU-uA91jmjcfDUoBgd6teXkaE9n';
+
+
 const fifafoldersgoogledriveID = '1ZedYvvCzIoXb08su2SVw2jglpIrU5R0I';
 
 // GET request to get APL 5 players data
@@ -561,7 +567,7 @@ app.get('/seasons/apl6/games', async (req,res)=>{
         const googleDrive = google.drive({ version: "v3", auth });
         const fileMetadata = {
             name: req.file.originalname,
-            parents: [playersfoldergoogledriveID]
+            parents: [apl7playersfoldergoogledriveID]
         };
         // const bufferStream = new stream.PassThrough()
         // bufferStream.end(req.body.file.buffer);
@@ -613,7 +619,7 @@ app.get('/seasons/apl6/games', async (req,res)=>{
         const googleDrive = google.drive({ version: "v3", auth });
         const fileMetadata = {
             name: req.file.originalname,
-            parents: [playersfoldergoogledriveID]
+            parents: [apl7playersfoldergoogledriveID]
         };
         // const bufferStream = new stream.PassThrough()
         // bufferStream.end(req.body.file.buffer);
@@ -661,7 +667,7 @@ app.get('/seasons/apl6/games', async (req,res)=>{
         const googleDrive = google.drive({ version: "v3", auth });
         const fileMetadata = {
             name: req.file.originalname,
-            parents: [teamfoldergoogledriveID]
+            parents: [apl7teamfoldergoogledriveID]
         };
         const media = {
             mimeType: req.file.mimetype,
@@ -705,7 +711,7 @@ app.get('/seasons/apl6/games', async (req,res)=>{
         const googleDrive = google.drive({ version: "v3", auth });
         const fileMetadata = {
             name: req.file.originalname,
-            parents: [teamfoldergoogledriveID]
+            parents: [apl7teamfoldergoogledriveID]
         };
         const media = {
             mimeType: req.file.mimetype,
