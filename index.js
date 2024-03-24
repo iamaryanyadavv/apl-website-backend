@@ -186,7 +186,7 @@ app.get('/seasons/apl5/awards', async (req,res)=>{
     res.send(Awards.data);
 })
 
-// GET request to get APL 6 registered players emailIDs data
+// GET request to get APL 7 registered players emailIDs data
 app.get('/registration/player', async(req,res)=>{
 
     const auth = new google.auth.GoogleAuth({
@@ -198,7 +198,7 @@ app.get('/registration/player', async(req,res)=>{
     const RegisteredPlayersEmailData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL7spreadsheetID,
-        range: 'Player Registration!L2:L900'
+        range: 'APL7Players!L2:L900'
     })
     res.send(RegisteredPlayersEmailData.data);
 })
@@ -213,7 +213,7 @@ app.get('/registration/checkreg', async(req,res)=>{
     const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL7spreadsheetID,
-        range: 'Player Registration!J2:J900'
+        range: 'APL7Players!J2:J900'
     })
     res.send(RegisteredPlayersGenderData.data);
 })
@@ -229,12 +229,12 @@ app.get('/registration/checkteamreg', async(req,res)=>{
     const RegisteredPlayersGenderData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL7spreadsheetID,
-        range: 'Team Registration!C2:C30'
+        range: 'APL7Teams!C2:C30'
     })
     res.send(RegisteredPlayersGenderData.data);
 })
 
-// GET request to get APL 6 registered teams emailIDs data
+// GET request to get APL 7 registered teams emailIDs data
 app.get('/registration/team', async(req,res)=>{
 
     const auth = new google.auth.GoogleAuth({
@@ -246,12 +246,12 @@ app.get('/registration/team', async(req,res)=>{
     const RegisteredTeamsEmailData = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId: APL7spreadsheetID,
-        range: 'Team Registration!B2:B900'
+        range: 'APL7Teams!B2:B900'
     })
     res.send(RegisteredTeamsEmailData.data);
 })
 
-// POST request to store APL 6 player data in database
+// POST request to store APL 7 player data in database
 app.post('/registration/player', async (req, res) =>{
 
     const auth = new google.auth.GoogleAuth({
@@ -262,7 +262,7 @@ app.post('/registration/player', async (req, res) =>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const response = await googleSheets.spreadsheets.values.append({
         spreadsheetId: APL7spreadsheetID,
-        range: "Player Registration",
+        range: "APL7Players",
         valueInputOption: "USER_ENTERED",
         resource: {
             // image, firstname, middlename, lastname, emailid, batch, phone, gender, primarypos, secondpos, comment
@@ -285,7 +285,7 @@ app.post('/registration/player', async (req, res) =>{
       res.send(response)
 } )
 
-// POST request to store APL 6 team data in database
+// POST request to store APL 7 team data in database
 app.post('/registration/team', async (req, res) =>{
 
     const auth = new google.auth.GoogleAuth({
@@ -296,7 +296,7 @@ app.post('/registration/team', async (req, res) =>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     const response = await googleSheets.spreadsheets.values.append({
         spreadsheetId: APL7spreadsheetID,
-        range: "Team Registration",
+        range: "APL7Teams",
         valueInputOption: "USER_ENTERED",
         resource: {
             // teamlogo, teamname, managername, manageremailid, managerphone, totalownersnumber, allownersemail, allownersemailIDs
@@ -316,7 +316,7 @@ app.post('/registration/team', async (req, res) =>{
       res.send(response)
 } )
 
-// POST request to store APL 6 team budgets data in database
+// POST request to store APL 7 team budgets data in database
 app.post('/registration/team/budgets', async (req, res) =>{
 
     const auth = new google.auth.GoogleAuth({
@@ -327,7 +327,7 @@ app.post('/registration/team/budgets', async (req, res) =>{
     const googleSheets = google.sheets({version: 'v4', auth: client});
     await googleSheets.spreadsheets.values.append({
         spreadsheetId: APL7spreadsheetID,
-        range: "Team Budget Splits",
+        range: "APL7TeamBudgetSPlits",
         valueInputOption: "USER_ENTERED",
         resource: {
             values: [[
