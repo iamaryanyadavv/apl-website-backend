@@ -186,6 +186,54 @@ app.get('/seasons/apl5/awards', async (req,res)=>{
     res.send(Awards.data);
 })
 
+// GET request to get APL 7 players data
+app.get('/seasons/apl7/playerdata', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const PlayerData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL7spreadsheetID,
+        range: 'APL7Players'
+    })
+    res.send(PlayerData.data);
+})
+
+// GET request to get APL 7 teams data
+app.get('/seasons/apl7/teamdata', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const TeamData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL7spreadsheetID,
+        range: 'APL7Teams'
+    })
+    res.send(TeamData.data.values);
+})
+
+// GET request to get APL 7 teams budget data
+app.get('/seasons/apl7/teamdata/budgets', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const TeamData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL7spreadsheetID,
+        range: 'APL7TeamBudgetSplits'
+    })
+    res.send(TeamData.data);
+})
+
 // GET request to get APL 7 registered players emailIDs data
 app.get('/registration/player', async(req,res)=>{
 
