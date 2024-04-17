@@ -217,6 +217,35 @@ app.get('/fantasy/apl7/playerdata', async (req,res)=>{
     res.send(PlayerData.data);
 })
 
+app.post('/fantasy/submit', async (req, res) => {
+    try {
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({ version: 'v4', auth: client });
+
+        const { name, player1, player2, player3, player4, player5, player6 } = req.body;
+        if (!name || !player1 || !player2 || !player3 || !player4 || !player5 || !player6) {
+            return res.status(400).send({ message: 'Missing data in request body' });
+        }
+
+        const values = [[name, player1, player2, player3, player4, player5, player6]];
+
+        const response = await googleSheets.spreadsheets.values.append({
+            auth,
+            spreadsheetId,
+            range,
+            valueInputOption: 'USER_ENTERED',
+            requestBody: {
+                values
+            }
+        });
+
+        res.status(200).send({ message: 'Data added successfully', data: response.data });
+    } catch (error) {
+        console.error('Error adding data to Google Sheets:', error);
+        res.status(500).send({ message: 'Failed to add data', error: error.message });
+    }
+});
+
 // GET request to get APL 7 teams data
 app.get('/seasons/apl7/teamdata', async (req,res)=>{
     const auth = new google.auth.GoogleAuth({
