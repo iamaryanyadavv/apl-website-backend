@@ -221,23 +221,28 @@ app.post('/fantasy/submit', async (req, res) => {
     try {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: 'v4', auth: client });
-
-        const { name, player1, player2, player3, player4, player5, player6 } = req.body;
-        if (!name || !player1 || !player2 || !player3 || !player4 || !player5 || !player6) {
-            return res.status(400).send({ message: 'Missing data in request body' });
-        }
-
-        const values = [[name, player1, player2, player3, player4, player5, player6]];
-
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        })
         const response = await googleSheets.spreadsheets.values.append({
-            auth,
-            spreadsheetId,
-            range,
-            valueInputOption: 'USER_ENTERED',
-            requestBody: {
-                values
-            }
-        });
+            spreadsheetId: APL7spreadsheetID,
+            range: "FantasySubmissions",
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                // image, firstname, middlename, lastname, emailid, batch, phone, gender, primarypos, secondpos, comment
+                values: [[
+                    req.body.name,
+                    req.body.player1, 
+                    req.body.player2, 
+                    req.body.player3, 
+                    req.body.player4,
+                    req.body.player5, 
+                    req.body.player6, 
+                ]],
+            },
+          });
+          res.send(response)
 
         res.status(200).send({ message: 'Data added successfully', data: response.data });
     } catch (error) {
