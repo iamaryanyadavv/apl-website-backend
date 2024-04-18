@@ -217,6 +217,39 @@ app.get('/fantasy/apl7/playerdata', async (req,res)=>{
     res.send(PlayerData.data);
 })
 
+// GET request to get Fantasy Submissions data in reverse order
+app.get('/fantasy/apl7/fantasysubmissions', async (req, res) => {
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    });
+
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({ version: 'v4', auth: client });
+
+    try {
+        const submissionsData = await googleSheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: APL7spreadsheetID,
+            range: 'FantasySubmissions'
+        });
+
+        // Reverse the rows of data before sending the response
+        if (submissionsData.data && submissionsData.data.values) {
+            const reversedData = submissionsData.data.values.reverse();
+            res.status(200).send(reversedData);
+        } else {
+            res.status(404).send('No data found');
+        }
+    } catch (error) {
+        console.error('Failed to retrieve data:', error);
+        res.status(500).send('Server error when fetching data');
+    }
+});
+
+
+
+
 app.post('/fantasy/submit', async (req, res) => {
     try {
    
