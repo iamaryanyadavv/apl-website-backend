@@ -247,7 +247,7 @@ app.post('/fantasy/submit', async (req, res) => {
             // Update the existing row if found
             await googleSheets.spreadsheets.values.update({
                 spreadsheetId: APL7spreadsheetID,
-                range: `FantasySubmissions!A${foundRow}:I${foundRow}`, // Assumes data has 9 columns from A to I
+                range: `FantasySubmissions!A${foundRow}:J${foundRow}`, // Assumes data has 9 columns from A to I
                 valueInputOption: "USER_ENTERED",
                 resource: {
                     values: [[
