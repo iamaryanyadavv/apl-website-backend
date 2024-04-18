@@ -251,8 +251,8 @@ app.post('/fantasy/submit', async (req, res) => {
                 valueInputOption: "USER_ENTERED",
                 resource: {
                     values: [[
-                        req.body.email,  // Make sure to include the identifier
                         req.body.name,
+                        req.body.email, 
                         req.body.player1,
                         req.body.player2,
                         req.body.player3,
