@@ -238,7 +238,7 @@ app.post('/fantasy/submit', async (req, res) => {
 
         let foundRow = 0;
         existingData.data.values.forEach((row, index) => {
-            if (row[0] === req.body.email) {  // Assuming the email is the first column in your sheet
+            if (row[1] === req.body.email) {  // Assuming the email is the first column in your sheet
                 foundRow = index + 1;  // +1 because sheets are 1-indexed
             }
         });
@@ -273,8 +273,8 @@ app.post('/fantasy/submit', async (req, res) => {
                 valueInputOption: "USER_ENTERED",
                 resource: {
                     values: [[
-                        req.body.email,  // Make sure to include the identifier
                         req.body.name,
+                        req.body.email,  
                         req.body.player1,
                         req.body.player2,
                         req.body.player3,
