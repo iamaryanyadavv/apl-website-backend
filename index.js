@@ -240,6 +240,8 @@ app.post('/fantasy/submit', async (req, res) => {
                     req.body.player4,
                     req.body.player5, 
                     req.body.player6, 
+                    req.body.captain, 
+                    req.body.viceCaptain, 
                 ]],
             },
           });
