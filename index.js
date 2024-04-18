@@ -217,6 +217,21 @@ app.get('/fantasy/apl7/playerdata', async (req,res)=>{
     res.send(PlayerData.data);
 })
 
+app.get('/fantasy/apl7/playersubmissions', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const PlayerData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL7spreadsheetID,
+        range: 'FantasySubmissions'
+    })
+    res.send(PlayerData.data);
+})
+
 
 
 
