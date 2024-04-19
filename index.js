@@ -202,6 +202,114 @@ app.get('/seasons/apl7/playerdata', async (req,res)=>{
     res.send(PlayerData.data);
 })
 
+app.get('/fantasy/apl7/playerdata', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const PlayerData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL7spreadsheetID,
+        range: 'Fantasy'
+    })
+    res.send(PlayerData.data);
+})
+
+app.get('/fantasy/apl7/playersubmissions', async (req,res)=>{
+    const auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    })
+    const client = await auth.getClient();
+    const googleSheets = google.sheets({version: 'v4', auth: client});
+    const PlayerData = await googleSheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId: APL7spreadsheetID,
+        range: 'FantasySubmissions'
+    })
+    res.send(PlayerData.data);
+})
+
+
+
+
+
+app.post('/fantasy/submit', async (req, res) => {
+    try {
+        const auth = new google.auth.GoogleAuth({
+            keyFile: 'credentials.json',
+            scopes: 'https://www.googleapis.com/auth/spreadsheets'
+        });
+        const client = await auth.getClient();
+        const googleSheets = google.sheets({ version: 'v4', auth: client });
+
+        // Fetch existing data to check if the user has already made a submission
+        const existingData = await googleSheets.spreadsheets.values.get({
+            spreadsheetId: APL7spreadsheetID,
+            range: "FantasySubmissions"
+        });
+
+        let foundRow = 0;
+        existingData.data.values.forEach((row, index) => {
+            if (row[1] === req.body.email) {  // Assuming the email is the first column in your sheet
+                foundRow = index + 1;  // +1 because sheets are 1-indexed
+            }
+        });
+
+        if (foundRow > 0) {
+            // Update the existing row if found
+            await googleSheets.spreadsheets.values.update({
+                spreadsheetId: APL7spreadsheetID,
+                range: `FantasySubmissions!A${foundRow}:J${foundRow}`, // Assumes data has 9 columns from A to I
+                valueInputOption: "USER_ENTERED",
+                resource: {
+                    values: [[
+                        req.body.name,
+                        req.body.email, 
+                        req.body.player1,
+                        req.body.player2,
+                        req.body.player3,
+                        req.body.player4,
+                        req.body.player5,
+                        req.body.player6,
+                        req.body.captain,
+                        req.body.viceCaptain,
+                    ]]
+                }
+            });
+            res.send({ message: 'Data updated successfully' });
+        } else {
+            // Append a new row if not found
+            await googleSheets.spreadsheets.values.append({
+                spreadsheetId: APL7spreadsheetID,
+                range: "FantasySubmissions",
+                valueInputOption: "USER_ENTERED",
+                resource: {
+                    values: [[
+                        req.body.name,
+                        req.body.email,  
+                        req.body.player1,
+                        req.body.player2,
+                        req.body.player3,
+                        req.body.player4,
+                        req.body.player5,
+                        req.body.player6,
+                        req.body.captain,
+                        req.body.viceCaptain,
+                    ]]
+                }
+            });
+            res.send({ message: 'Data added successfully' });
+        }
+    } catch (error) {
+        console.error('Error processing the request:', error);
+        res.status(500).send({ message: 'Failed to process the request', error: error.message });
+    }
+});
+
+
 // GET request to get APL 7 teams data
 app.get('/seasons/apl7/teamdata', async (req,res)=>{
     const auth = new google.auth.GoogleAuth({
